@@ -1,0 +1,476 @@
+;;The load-path
+(add-to-list 'load-path "/home/amal029/emacs")
+(add-to-list 'load-path "/home/amal029/emacs/w3m")
+(add-to-list 'load-path "/home/amal029/emacs/bbdb")
+(add-to-list 'load-path "/usr/share/emacs/site-lisp")
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/haskell-mode")
+(add-to-list 'load-path "/opt/share/emacs/site-lisp")
+(add-to-list 'load-path "/home/amal029/emacs/yasnippet-0.6.1c")
+(add-to-list 'load-path "/home/amal029/emacs/mailcrypt")
+(add-to-list 'load-path "/home/amal029/emacs/my_color_theme.el")
+
+;; ugly hack for debian's stupidity
+(defconst debian-emacs-flavor 'emacs24
+          "A symbol representing the particular debian flavor of emacs running.
+          Something like 'emacs20, 'xemacs20, etc.")
+;; (add-to-list 'load-path "/macports-1.9.1/share/emacs/site-lisp/vm")
+
+;;OSX specific
+;; (setq mac-option-modifier 'meta)
+
+;; the faces at 
+
+;; my color theme
+(defun color-theme-avi ()
+  (interactive)
+  (color-theme-install
+   '(color-theme-avi
+     ((background-color . "#e9eaec")
+      (background-mode . light)
+      (border-color . "#969696")
+      (cursor-color . "#000000")
+      (foreground-color . "#480510")
+      (mouse-color . "black"))
+     (fringe ((t (:background "#969696"))))
+     (mode-line ((t (:foreground "#ffffff" :background "#16299c"))))
+     (region ((t (:background "#666666"))))
+     (font-lock-builtin-face ((t (:foreground "#f820b4"))))
+     (font-lock-comment-face ((t (:foreground "#7d827d"))))
+     (font-lock-function-name-face ((t (:foreground "#102cc1"))))
+     (font-lock-keyword-face ((t (:foreground "#b415c1"))))
+     (font-lock-string-face ((t (:foreground "#c77429"))))
+     (font-lock-type-face ((t (:foreground"#199915"))))
+     (font-lock-variable-name-face ((t (:foreground "#e6a00f"))))
+     (minibuffer-prompt ((t (:foreground "#203365" :bold t))))
+     (font-lock-warning-face ((t (:foreground "Red" :bold t))))
+     )))
+(provide 'color-theme-avi)
+
+;; Color-themes
+(defun color ()
+  (print "debug")
+  (require 'color-theme)
+  (eval-after-load "color-theme"
+    '(progn
+       (color-theme-initialize)
+       (color-theme-xemacs)))
+  )
+
+;; (if (display-graphic-p)
+;;     (color))
+
+;;Set everything as it is
+(require 'vimpulse)
+(setq auto-mode-alist (cons '("\\.str$" . c-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.sysj$" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.jadd$" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.jrag$" . java-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.x10$" . java-mode) auto-mode-alist))
+
+(setq-default indent-tabs-model t)
+(autoload 'ebib "ebib" "Ebib, a BibTeX database Manager." t)
+
+(global-set-key "\M-q" 'fill-paragraph)
+(setq-default fill-column 72)
+(setq auto-fill-mode 1)
+(setq mail-user-agent 'message-user-agent)
+(setq sendmail-send-it "msmtp")
+
+;; On linux/unix only
+(setq sendmail-program "/usr/bin/msmtp")
+
+(setq compose-mail-check-user-agent nil)
+
+(setq etach-prompt-me-for-file-names t)
+(setq etach-clean-decoded-plain-text t)
+(setq etach-fill-decoded-plain-text t)
+
+(global-set-key "\C-c\C-f" 'find-file-at-point)
+(global-set-key "\C-c\C-u" 'browse-url-at-point)
+(autoload 'ruby-mode "ruby-mode"
+  "Mode for editing ruby source files" t)
+(setq auto-mode-alist
+      (append '(("\\.rb$" . ruby-mode)) auto-mode-alist))
+(setq interpreter-mode-alist (append '(("ruby" . ruby-mode))
+				     interpreter-mode-alist))
+
+(autoload 'run-ruby "inf-ruby"
+  "Run an inferior Ruby process")
+(autoload 'inf-ruby-keys "inf-ruby"
+  "Set local key defs for inf-ruby in ruby-mode")
+(add-hook 'ruby-mode-hook
+	  '(lambda ()
+	     (inf-ruby-keys)
+	     ))
+;; (global-set-key "\C-cb" 'ebib)
+
+(add-hook 'latex-mode-hook
+	  '(lambda()
+	     (local-set-key "\C-cb" 'ebib)))
+(add-hook 'latex-mode-hook
+	  '(lambda()
+	     (local-set-key "\C-ci" 'ebib-insert-bibtex-key)))
+(add-hook 'flyspell-mode-hook
+	  '(lambda()
+	     (local-set-key "\C-c]" 'flyspell-goto-next-error)))
+
+(add-hook 'message-mode-hook 'flyspell-mode)
+
+
+(add-hook 'latex-model-hook 'flyspell-mode)
+
+;;; The w3m browser support for emacs
+(require 'w3m-load)
+(setq w3m-use-cookies t)
+
+;; The dvi viewer on this PC because its stupid windows-7
+(setq tex-dvi-view-command "xdvi")
+
+;;Yes or no p
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; (setq w32-use-w32-font-dialog nil)
+
+;; The cursor type should be block
+(set-default 'cursor-type 'box)
+(set 'cursor-type 'box)
+(setq blink-cursor-mode 1)
+(set-cursor-color "white")
+
+;;Need auctex
+(require 'tex-site)
+
+;;Need reftex with plain old emacs
+(add-to-list 'load-path "Users/amal029/emacs/reftex-4.31")
+(setq reftex-plug-into-AUCTeX t)
+(autoload 'reftex-mode     "reftex" "RefTeX Minor Mode" t)
+(autoload 'turn-on-reftex  "reftex" "RefTeX Minor Mode" nil)
+(autoload 'reftex-citation "reftex-cite" "Make citation" nil)
+(autoload 'reftex-index-phrase-mode "reftex-index" "Phrase mode" t)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+(add-hook 'latex-mode-hook 'turn-on-reftex)   ; with Emacs latex mode
+
+;; OCaml Mode
+(setq auto-mode-alist
+      (cons '("\\.ml[iyl]?$" .  tuareg-mode) auto-mode-alist))
+(autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
+(autoload 'camldebug "camldebug-tuareg" "Run the Caml debugger" t)
+(require 'font-lock)
+
+;; you should probably comment the next line or replace ~remy by another path 
+(setq load-path (cons "/home/amal029/emacs/" load-path))
+
+
+;;---------------------------------------------------------------- 
+(autoload 'vm "vm" "Start VM on your primary inbox." t)
+(autoload 'vm-other-frame "vm" "Like `vm' but starts in another frame." t)
+(autoload 'vm-visit-folder "vm" "Start VM on an arbitrary folder." t)
+(autoload 'vm-visit-virtual-folder "vm" "Visit a VM virtual folder." t)
+(autoload 'vm-mode "vm" "Run VM major mode on a buffer" t)
+(autoload 'vm-mail "vm" "Send a mail message using VM." t)
+(autoload 'vm-submit-bug-report "vm" "Send a bug report about VM." t)
+
+(setq user-full-name "Avinash Malik"
+      mail-from-style 'angles
+      user-mail-address "amalik@scss.tcd.ie"
+      mail-default-reply-to "amalik@scss.tcd.ie")
+
+
+(setq vm-stunnel-program "/usr/sbin/stunnel3")
+(setq send-mail-function 'sendmail-send-it)
+
+;;-----------------------------------------------------------------
+
+;; ;; (setq send-mail-function 'mail-send-it)
+;; (setq message-send-mail-function 'smtpmail-send-it)
+;; (setq smtpmail-default-smtp-server "go.tcd.ie")
+;; (load-libary "smtpmail")
+;; (setq smtpmail-smtp-server "go.tcd.ie")
+;; (setq smtpmail-auth-credentials  ; or use ~/.authinfo
+;;       '(("smtp.inria.fr" 587 "amalik" "u8Resuhu")))
+;; (setq smtpmail-smtp-service 587)
+;; (setq smtpmail-starttls-credentials
+;;       '(("go.tcd.ie" "587" nil nil)))
+;; (setq smtp-debug-info t)
+
+;; auto-fill-mode on
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+;; (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+
+;; Setting the ispell program to hunspell
+
+(setq ispell-program-name "/usr/bin/hunspell")
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(browse-url-browser-function (quote browse-url-generic))
+ '(browse-url-generic-program "/usr/bin/google-chrome")
+ '(c-default-style (quote ((c-mode . "k&r") (java-mode . "gnu") (awk-mode . "awk") (other . "gnu"))))
+ '(column-number-mode t)
+ '(debug-on-error t)
+ '(display-time-mode t)
+ '(exec-path (quote ("/usr/lib/jvm/java-6-openjdk-i386/bin" "/opt/openmpi/bin" "/usr/lib/jvm/java-6-openjdk-i386/bin" "/opt/openmpi/bin" "/usr/lib/jvm/java-6-openjdk-i386/bin" "/opt/openmpi/bin" "/usr/local/bin" "/usr/bin" "/bin" "/usr/games" "/opt/mpich2/bin" "/home/amal029/streamit-src-2.1.1" "/opt/axel/bin/" "/home/amal029/charm/bin" "/home/amal029/ILOG/CPLEX/cplex/bin/x86_sles10_4.1" "/home/amal029/x10-trunk/x10.dist/bin" "/home/amal029/esterel/bin" "/home/amal029/Dropbox/Zoran-Avinash/Dynamic_GALS_willie/EMSOFT_2012/BZR/heptagon-0.5/bin" "/home/amal029/Dropbox/Zoran-Avinash/Dynamic_GALS_willie/EMSOFT_2012/BZR/Sigali-2.4/bin" "/opt/mpich2/bin" "/home/amal029/streamit-src-2.1.1" "/opt/axel/bin/" "/home/amal029/charm/bin" "/home/amal029/ILOG/CPLEX/cplex/bin/x86_sles10_4.1" "/home/amal029/x10-trunk/x10.dist/bin" "/home/amal029/esterel/bin" "/home/amal029/Dropbox/Avinash-Willie/Dynamic_GALS_willie/EMSOFT_2012/BZR/heptagon-0.5/bin" "/home/amal029/Dropbox/Avinash-Willie/Dynamic_GALS_willie/EMSOFT_2012/BZR/Sigali-2.4/bin" "/opt/mpich2/bin" "/home/amal029/streamit-src-2.1.1" "/opt/axel/bin/" "/home/amal029/charm/bin" "/home/amal029/ILOG/CPLEX/cplex/bin/x86_sles10_4.1" "/home/amal029/x10-trunk/x10.dist/bin" "/home/amal029/esterel/bin" "/home/amal029/Dropbox/Avinash-Willie/Dynamic_GALS_willie/EMSOFT_2012/BZR/heptagon-0.5/bin" "/home/amal029/Dropbox/Avinash-Willie/Dynamic_GALS_willie/EMSOFT_2012/BZR/Sigali-2.4/bin" "/opt/libexec/emacs/24.0.93/i686-pc-linux-gnu" "/home/amal029/lustre-v4-II.mg-linux/bin")))
+ '(global-linum-mode nil)
+ '(mail-archive-file-name "~/Mail/Sent")
+ '(menu-bar-mode nil)
+ '(org-agenda-files nil)
+ '(safe-local-variable-values (quote ((todo-categories "IBM Exascale Project" "Todo"))))
+ '(scroll-bar-mode nil)
+ '(show-paren-mode t)
+ '(tool-bar-mode nil)
+ '(vm-auto-get-new-mail t)
+ '(yas/prompt-functions (quote (yas/dropdown-prompt))))
+
+;; http_proxy if I am TCD
+
+;; (setq url-proxy-services '(("no_proxy" . "tcd\\.ie")
+;;                            ("http" . "www-proxy.scss.tcd.ie:8080")))
+
+
+;; Tabbing in emacs
+;; (require 'tabbar)
+;; (autoload 'tabbar-mode "tabbar-mode")
+;; (tabbar-mode 1)
+;; (setq tabbar-buffer-groups-function
+;;       (lambda ()
+;; 	(list "All")))
+;; (global-set-key "\M-[" 'tabbar-backward-tab)
+;; (global-set-key "\M-]" 'tabbar-forward-tab)
+
+;;bbdb addons
+;; (bbdb-insinuate-message)
+(setq 
+ bbdb-offer-save 1                        ;; 1 means save-without-asking
+
+ 
+ bbdb-use-pop-up t                        ;; allow popups for addresses
+ bbdb-electric-p t                        ;; be disposable with SPC
+ bbdb-popup-target-lines  2               ;; very small
+ 
+ bbdb-dwim-net-address-allow-redundancy t ;; always use full name
+ bbdb-quiet-about-name-mismatches 2       ;; show name-mismatches 2 secs
+
+ bbdb-always-add-address t                ;; add new addresses to existing...
+ ;; ...contacts automatically
+ bbdb-canonicalize-redundant-nets-p t     ;; x@foo.bar.cx => x@bar.cx
+
+ bbdb-completion-type nil                 ;; complete on anything
+
+ bbdb-complete-name-allow-cycling t       ;; cycle through matches
+ ;; this only works partially
+
+ bbbd-message-caching-enabled t           ;; be fast
+ bbdb-use-alternate-names t               ;; use AKA
+
+
+ bbdb-elided-display t                    ;; single-line addresses
+
+ ;; auto-create addresses from mail
+ bbdb/mail-auto-create-p 'bbdb-ignore-some-messages-hook   
+ bbdb-ignore-some-messages-alist ;; don't ask about fake addresses
+ ;; NOTE: there can be only one entry per header (such as To, From)
+ ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
+
+ ;; '(( "From" . "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter")))
+ )
+
+;; ;; Compilation for C/C++
+
+(autoload 'mode-compile "mode-compile"
+  "Command to compile current buffer file based on the major mode" t)
+(global-set-key "\C-cc" 'mode-compile)
+(autoload 'mode-compile-kill "mode-compile"
+  "Command to kill a compilation launched by `mode-compile'" t)
+(global-set-key "\C-ck" 'mode-compile-kill)
+
+;; Using the makefile
+(require 'cl) ; If you don't have it already
+
+(defun* get-closest-pathname (&optional (file "Makefile"))
+  "Determine the pathname of the first instance of FILE starting from the current directory towards root.
+This may not do the correct thing in presence of links. If it does not find FILE, then it shall return the name
+of FILE in the current directory, suitable for creation"
+  (let ((root (expand-file-name "/"))) ; the win32 builds should translate this correctly
+    (expand-file-name file
+		      (loop 
+		       for d = default-directory then (expand-file-name ".." d)
+		       if (file-exists-p (expand-file-name file d))
+		       return d
+		       if (equal d root)
+		       return nil))))
+(add-hook 'java-mode-hook (lambda () 
+			    (set (make-local-variable 'compile-command) (format "make -f %s" (get-closest-pathname)))))
+
+(display-time)
+(add-hook 'diary-hook 'appt-make-list)
+(diary 0)
+
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/emacs/yasnippet-0.6.1c/snippets")
+
+;; Opacity
+(defun djcb-opacity-modify (&optional dec)
+  "modify the transparency of the emacs frame; if DEC is t,
+    decrease the transparency, otherwise increase it in 10%-steps"
+  (let* ((alpha-or-nil (frame-parameter nil 'alpha)) ; nil before setting
+	 (oldalpha (if alpha-or-nil alpha-or-nil 100))
+	 (newalpha (if dec (- oldalpha 10) (+ oldalpha 10))))
+    (when (and (>= newalpha frame-alpha-lower-limit) (<= newalpha 100))
+      (modify-frame-parameters nil (list (cons 'alpha newalpha))))))
+
+;; C-8 will increase opacity (== decrease transparency)
+;; C-9 will decrease opacity (== increase transparency
+;; C-0 will returns the state to normal
+(global-set-key (kbd "C-8") '(lambda()(interactive)(djcb-opacity-modify)))
+(global-set-key (kbd "C-9") '(lambda()(interactive)(djcb-opacity-modify t)))
+(global-set-key (kbd "C-0") '(lambda()(interactive)
+                               (modify-frame-parameters nil `((alpha . 100)))))
+
+;; Save emacs between sessions
+(desktop-save-mode 1)
+
+;; server start
+(server-start)
+;; calendar
+(calendar)
+
+;; Mail signing and encryption
+(require 'mailcrypt)
+(mc-setversion "gpg")
+(add-hook 'mail-mode-hook 'mc-install-write-mode)
+(add-hook 'vm-mode-hook 'mc-install-read-mode)
+(add-hook 'vm-summary-mode-hook 'mc-install-read-mode)
+(add-hook 'vm-virtual-mode-hook 'mc-install-read-mode)
+
+
+
+;;setting the keys for mailcrypt
+(global-set-key "\C-cs" 'mc-sign)
+(global-set-key "\C-cv" 'mc-verify)
+(global-set-key "\C-ce" 'mc-encrypt)
+(global-set-key "\C-cd" 'mc-decrypt)
+(put 'upcase-region 'disabled nil)
+
+;; thesaurs
+(require 'mthesaur)
+(global-set-key "\C-ct" 'mthesaur-search)
+(global-set-key "\C-c\C-t" 'mthesaur-search-append)
+
+;;org mode customizations
+(setq org-agenda-include-diary t)
+
+					; Erase all reminders and rebuilt reminders for today from the agenda
+(defun bh/org-agenda-to-appt ()
+  (interactive)
+  (setq appt-time-msg-list nil)
+  (org-agenda-to-appt))
+
+					; Rebuild the reminders everytime the agenda is displayed
+(add-hook 'org-finalize-agenda-hook 'bh/org-agenda-to-appt 'append)
+
+					; This is at the end of my .emacs - so appointments are set up when Emacs starts
+(bh/org-agenda-to-appt)
+
+					; Activate appointments so we get notifications
+(appt-activate t)
+
+; If we leave Emacs running overnight - reset the appointments one minute after midnight
+(run-at-time "24:01" nil 'bh/org-agenda-to-appt)
+
+					; Autp save in temp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+(setq auto-save-default 1)
+
+(global-set-key "\C-xm" 'message-mail)
+;;
+;; Sart shell
+(shell)
+;;
+;; start eshell
+;;
+;; (eshell)
+
+(global-set-key "\C-]" 'find-tag)
+
+
+(require 'scheme-complete)
+(autoload 'scheme-smart-complete "scheme-complete" nil t)
+(eval-after-load 'scheme
+  '(define-key scheme-mode-map "\t" 'scheme-complete-or-indent))
+
+
+;; automatic braces and brackets never uncomment, it breaks vi
+;; compatability
+
+;; (require 'autopair)
+;; (autopair-global-mode)
+
+;; puts the /la in the coding mode
+;; (setq c-auto-newline t)
+
+;; start vm
+(vm)
+
+;; customize vm
+(add-hook 'vm-mail-mode-hook 'message-mode)
+
+(set-default-font
+ "-*-inconsolata-medium-r-normal--20-130-72-72-m-130-iso10646-1")
+;(set-default-font
+ ;"-*-newspaper-*-*-*-*-*-*-*-*-*-*-*-*")
+
+;; (custom-set-faces
+;;   ;; custom-set-faces was added by Custom.
+;;   ;; If you edit it by hand, you could mess it up, so be careful.
+;;   ;; Your init file should contain only one such instance.
+;;   ;; If there is more than one, they won't work right.
+;;  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight bold :height 150 :width normal :foundry "adobe" :family "courier")))))
+
+;; Add the original Emacs Lisp Package Archive
+;; (add-to-list 'package-archives
+;;              '("elpa" . "http://tromey.com/elpa/"))
+;; Add the user-contributed repository
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ )
+
+;; The octave-mode initialized
+(autoload 'octave-mod "octave-mode" nil t)
+(setq auto-mode-alist (cons '("\\.m$" . octave-mode) auto-mode-alist))
+(add-hook 'octave-mode-hook
+	  (lambda ()
+	    (load-file "~/emacs/vimpulse.el")))
+
+;; start the ido-mode
+(ido-mode)
+
+;;doc-view mode
+(add-hook 'doc-view-mode-hook 'auto-revert-mode)
+
+;; bzr file mode
+(require 'bzr-mode)
+(setq auto-mode-alist (cons '("\\.ept$" . bzr-mode) auto-mode-alist))
+
+;; ocal file mode
+;; ocal is a powerful ocaml calculator
+(require 'ocal-mode)
+(setq auto-mode-alist (cons '("\\.ocal$" . ocal-mode) auto-mode-alist))
+
+;; Haskell Mode
+(require 'haskell-mode)
+(setq auto-mode-alist
+      (cons '("\\.hs$" .  haskell-mode) auto-mode-alist))
+(autoload 'haskell-mode "haskell" "Major mode for editing Haskell code" t)
+(require 'font-lock)
+
