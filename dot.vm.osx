@@ -1,0 +1,125 @@
+(setq vm-mutable-windows t vm-mutable-frames nil)
+
+(setq vm-spool-files '("/var/mail/amal029"))
+
+(setq vm-imap-auto-expunge-alist
+      '(
+	;; leave message on the server
+	;;       ("imap-ssl:go.tcd.ie:993:inbox:login:amalik:*" . nil)
+	("/var/mail/amal029" . t)
+	;; expunge immediately
+	;; ("imap:hilo.harkie.org:143:inbox:login:kyle:*" . t)
+	)
+      )
+
+(setq vm-auto-get-new-mail 1)
+
+(setq vm-mutable-windows t vm-mutable-frames nil)
+
+(setq vm-display-using-mime t)
+
+(setq vm-auto-decode-mime-messages t)
+
+(setq vm-mime-decode-for-preview t)
+
+(setq  vm-strip-reply-headers t)
+
+(add-to-list 'vm-mime-default-face-charsets "Windows-1251")
+(add-to-list 'vm-mime-default-face-charsets "Windows-1252")
+(add-to-list 'vm-mime-default-face-charsets "Windows-1257")
+
+;; (delete "iso-8859-1" vm-mime-default-face-charsets)
+;; (add-to-list 'vm-mime-mule-charset-to-coding-alist
+;; 	     '("iso-8859-1" windows-1252))
+
+(setq vm-mime-charset-converter-alist
+      '(
+	("iso-8859-1" "windows-1252" "iconv -f iso-8859-1 -t windows-1252")
+	("iso-8859-15" "windows-1252" "iconv -f iso-8859-1 -t windows-1252")
+	("utf-8" "windows-1252" "iconv -f utf-8 -t windows-1252")
+	)
+      )
+(setq vm-mime-charset-font-alist
+      '(
+	("iso-8859-1" . "-*-*-medium-r-normal-*-16-160-72-72-c-80-iso8859-1")
+	)
+      )
+
+(setq
+
+ vm-auto-displayed-mime-content-types
+ '("multipart/mixed" "multipart/alternative"
+   "text/plain" "multipart/signed" "text" "plain text" "multipart" "message")
+ vm-mime-base64-encoder-program "/macports-1.9.1/bin/base64-encode"
+ vm-mime-base64-decoder-program "/macports-1.9.1/bin/base64-decode"
+ vm-mime-qp-encoder-program "/macports-1.9.1/bin/qp-encode"
+ vm-mime-qp-decoder-program "/macports-1.9.1/bin/qp-decode"
+ vm-send-using-mime nil
+ vm-url-browser
+ 'vm-mouse-send-url-to-netscape ;;; ok w/mozilla too
+ vm-mime-external-content-types-alist
+ '(
+   ("text/html" "exec open") ;;; Will launch new browser.
+   ("image/gif" "exec open")
+   ("image/jpeg" "exec open")
+   ("image/png" "exec open")
+   ("application/pdf" "open")
+   ("application/postscript" "xdvi")
+   ("video" "exec open")
+   ("audio/x-pn-realaudio" "open")
+   ("audio" "open")
+   ("application/msword" "\"/Applications/Microsoft Office 2008/Microsoft Word.app/Contents/MacOS/Microsoft Word\"")
+   ;; ("application/xls" "exec open")
+
+   )
+ vm-folder-directory "~/Mail/"
+ vm-crash-box "~/Mail/INBOX.CRASH"
+ vm-auto-get-new-mail t
+ vm-circular-folders nil
+ vm-confirm-new-folders t
+ vm-convert-folder-types t
+ 
+ vm-forwarding-subject-format "[forwarded from %F] %s"
+ vm-forwarding-digest-type "rfc934"
+ vm-in-reply-to-format nil
+ vm-included-text-attribution-format
+ "On %w, %m %d, %y at %h (%z), %F wrote:\n"
+ vm-reply-subject-prefix "Re: "
+
+ vm-mail-header-from "Avinash Malik <amalik@scss.tcd.ie>"
+ vm-move-after-deleting t
+ vm-delete-after-saving t
+ vm-edit-message-mode 'indented-text-mode
+ vm-follow-summary-cursor t
+
+ vm-default-folder-type 'From_-with-Content-Length
+ vm-trust-From_-with-Content-Length t
+
+;;; emacs frames (windows)
+
+ vm-frame-per-composition t
+ vm-frame-per-folder t
+ vm-frame-per-edit nil
+
+ vm-highlighted-header-regexp
+ "^From\\|^Subject\\|^Date\\|^CC\\|^Cc\\|To"
+ vm-preview-lines nil
+ vm-startup-with-summary t
+ vm-summary-format "%3n %*%A %-17.17F %-3.3m %2d (%4l) %I%s\n"
+ vm-summary-highlight-face "region"
+ vm-summary-show-threads nil
+ vm-visible-headers '("From:" "Sender:" "To:" "Apparently-To:"
+		      "Cc:" "Subject:" "Date:" "Resent-From:"
+		      "Message-Id:" "Message-ID:" "Message-id:" 
+		      "Resent-Sender:" "X-Zippy")
+
+ )
+
+;;Database: BBDB
+(require 'bbdb)
+(bbdb-initialize)
+(bbdb-insinuate-vm)
+
+;;Super cite
+(require 'supercite)
+(add-hook 'mail-yank-hooks 'sc-cite-original)
